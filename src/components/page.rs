@@ -20,14 +20,14 @@ pub struct PageComponentProps {
 #[component]
 pub fn PageComponent(props: &PageComponentProps) -> Html {
     let page_url = props.page_url.clone();
+    let page_state = use_reducer(|| QuizState::new(&page_url));
+    let navigator = use_navigator().unwrap();
+
     let page = get_page(&page_url);
     if let None = page {
         return four_oh_four();
     }
     let page = page.unwrap();
-
-    let page_state = use_reducer(|| QuizState::new(&page_url));
-    let navigator = use_navigator().unwrap();
 
     match page_state.quiz_status {
         QuizPhase::PresentingQuestions => {
@@ -66,8 +66,9 @@ pub fn PageComponent(props: &PageComponentProps) -> Html {
             let navigator = navigator.clone();
 
             let onsuccess = Callback::from(move |next_url: String| {
-                let path = format!("/{}", next_url);
-                navigator.push(&Route::Page { page: path });
+                let page_state = page_state.clone();
+                page_state.dispatch(QuizAction::Advance(next_url.clone()));
+                navigator.push(&Route::Page { page: next_url });
             });
 
             html! {
@@ -80,6 +81,8 @@ pub fn PageComponent(props: &PageComponentProps) -> Html {
         QuizPhase::Retrying => {
             let navigator = navigator.clone();
             let on_retry = Callback::from(move |_| {
+                let page_state = page_state.clone();
+                page_state.dispatch(QuizAction::Retry);
                 navigator.push(&Route::Page {
                     page: page_url.clone(),
                 });

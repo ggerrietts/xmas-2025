@@ -26,7 +26,7 @@ fn pages() -> Vec<Page> {
         .get_or_init(|| {
             vec![
                 Page::new(
-                    "/happyholly",
+                    "happyholly",
                     "Under the tree",
                     vec![
                         Question::new(
@@ -45,7 +45,7 @@ fn pages() -> Vec<Page> {
                     false,
                 ),
                 Page::new(
-                    "/elftastic",
+                    "elftastic",
                     "Inside the dryer",
                     vec![
                         Question::new(
@@ -69,7 +69,7 @@ fn pages() -> Vec<Page> {
                     false,
                 ),
                 Page::new(
-                    "/candycanary",
+                    "candycanary",
                     "In the dishwasher",
                     vec![
                         Question::new(
@@ -80,7 +80,7 @@ fn pages() -> Vec<Page> {
                                 "Trixie and the Illusions",
                                 "The Dazzlings",
                                 "Grand Funk Railroad",
-                                "Huntr/x",
+                                "Huntrx",
                             ],
                         ),
                         Question::new(
@@ -95,7 +95,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                     ],
-                    false,
+                    true,
                 ),
             ]
         })

@@ -30,6 +30,8 @@ pub enum QuizPhase {
 }
 
 pub enum QuizAction {
+    Advance(String),
+    Retry,
     Review,
     SelectAnswer(QuestionIndex, AnswerIndex),
 }
@@ -54,6 +56,20 @@ impl Reducible for QuizState {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
+            QuizAction::Advance(new_url) => QuizState {
+                answers: Vec::new(),
+                page_url: new_url.clone(),
+                question_index: 0,
+                quiz_status: QuizPhase::PresentingQuestions,
+            }
+            .into(),
+            QuizAction::Retry => QuizState {
+                answers: Vec::new(),
+                page_url: self.page_url.clone(),
+                question_index: 0,
+                quiz_status: QuizPhase::PresentingQuestions,
+            }
+            .into(),
             QuizAction::SelectAnswer(question_index, answer_index) => {
                 let mut answers = self.answers.clone();
                 let page = get_page(&self.page_url).unwrap();

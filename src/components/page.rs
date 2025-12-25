@@ -1,136 +1,99 @@
+use super::{
+    fragments::{congrats_page, four_oh_four},
+    question::QuestionComponent,
+    retry::RetryComponent,
+    review::ReviewComponent,
+    success::SuccessComponent,
+};
+use crate::models::get_page;
+use crate::router::Route;
+use crate::state::{QuizAction, QuizPhase, QuizState};
+
 use yew::prelude::*;
-use crate::models::Page;
-use super::question::QuestionComponent;
-use super::review::ReviewComponent;
-use super::result::ResultComponent;
-
-pub enum PageView {
-    Question { index: usize },
-    Review,
-    Result { success: bool },
-}
-
-pub enum Msg {
-    AnswerSelected { question_index: usize, answer: String },
-    NextQuestion,
-    SubmitAnswers,
-    TryAgain,
-}
+use yew_router::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct PageComponentProps {
-    pub page: Page,
+    pub page_url: String,
 }
 
-pub struct PageComponent {
-    view: PageView,
-    answers: Vec<Option<String>>,
-    page: Page,
-}
-
-impl Component for PageComponent {
-    type Message = Msg;
-    type Properties = PageComponentProps;
-
-    fn create(ctx: &Context<Self>) -> Self {
-        let page = ctx.props().page.clone();
-        let num_questions = page.questions.len();
-        
-        Self {
-            view: PageView::Question { index: 0 },
-            answers: vec![None; num_questions],
-            page,
-        }
+#[component]
+pub fn PageComponent(props: &PageComponentProps) -> Html {
+    let page_url = props.page_url.clone();
+    let page = get_page(&page_url);
+    if let None = page {
+        return four_oh_four();
     }
+    let page = page.unwrap();
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-        match msg {
-            Msg::AnswerSelected { question_index, answer } => {
-                if question_index < self.answers.len() {
-                    self.answers[question_index] = Some(answer);
-                }
-                true
-            }
-            Msg::NextQuestion => {
-                match &self.view {
-                    PageView::Question { index } => {
-                        let next_index = *index + 1;
-                        if next_index < self.page.questions.len() {
-                            self.view = PageView::Question { index: next_index };
-                        } else {
-                            self.view = PageView::Review;
-                        }
+    let page_state = use_reducer(|| QuizState::new(&page_url));
+    let navigator = use_navigator().unwrap();
+
+    match page_state.quiz_status {
+        QuizPhase::PresentingQuestions => {
+            html! {
+                <QuestionComponent
+                    page_url={page_url.clone()}
+                    question_index={page_state.question_index}
+                    on_answer_selected={
+                        let page_state = page_state.clone();
+                        Callback::from(move |selected_answer| {
+                            page_state.dispatch(QuizAction::SelectAnswer(
+                                page_state.question_index,
+                                selected_answer,
+                            ));
+                        })
                     }
-                    _ => {}
-                }
-                true
-            }
-            Msg::SubmitAnswers => {
-                let all_correct = self.validate_answers();
-                self.view = PageView::Result { success: all_correct };
-                true
-            }
-            Msg::TryAgain => {
-                // Reset all answers and go back to first question
-                self.answers = vec![None; self.page.questions.len()];
-                self.view = PageView::Question { index: 0 };
-                true
+                />
             }
         }
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
-        match &self.view {
-            PageView::Question { index } => {
-                let question_index = *index;
-                let question = &self.page.questions[question_index];
-                let selected_answer = self.answers[question_index].clone();
-                let can_proceed = selected_answer.is_some();
-                
-                html! {
-                    <div class="question-view">
-                        <QuestionComponent
-                            question={question.clone()}
-                            selected_answer={selected_answer}
-                            on_answer_selected={ctx.link().callback(move |answer: String| {
-                                Msg::AnswerSelected { question_index, answer }
-                            })}
-                            on_next={ctx.link().callback(|_| Msg::NextQuestion)}
-                            can_proceed={can_proceed}
-                        />
-                    </div>
-                }
-            }
-            PageView::Review => {
-                html! {
-                    <ReviewComponent
-                        questions={self.page.questions.clone()}
-                        answers={self.answers.clone()}
-                        on_submit={ctx.link().callback(|_| Msg::SubmitAnswers)}
-                    />
-                }
-            }
-            PageView::Result { success } => {
-                html! {
-                    <ResultComponent
-                        success={*success}
-                        next_destination={self.page.next_destination.clone()}
-                        on_try_again={ctx.link().callback(|_| Msg::TryAgain)}
-                    />
-                }
+        QuizPhase::ReviewingAnswers => {
+            html! {
+                <ReviewComponent
+                    page_url={page_url.clone()}
+                    answers={page_state.answers.clone()}
+                    on_submit={
+                        let page_state = page_state.clone();
+                        Callback::from(move |_| {
+                            page_state.dispatch(QuizAction::Review);
+                        })
+                    }
+                />
             }
         }
-    }
-}
+        QuizPhase::MovingOn => {
+            let page = page.clone();
+            let navigator = navigator.clone();
 
-impl PageComponent {
-    fn validate_answers(&self) -> bool {
-        self.page.questions.iter().enumerate().all(|(i, q)| {
-            if let Some(ref answer) = self.answers[i] {
-                answer == &q.correct_answer
-            } else {
-                false
+            let onsuccess = Callback::from(move |next_url: String| {
+                let path = format!("/{}", next_url);
+                navigator.push(&Route::Page { page: path });
+            });
+
+            html! {
+                <SuccessComponent
+                    location = { page.location.clone() }
+                    on_success = { onsuccess }
+                />
             }
-        })
+        }
+        QuizPhase::Retrying => {
+            let navigator = navigator.clone();
+            let on_retry = Callback::from(move |_| {
+                navigator.push(&Route::Page {
+                    page: page_url.clone(),
+                });
+            });
+            html! {
+                <RetryComponent
+                    on_retry={on_retry}
+                />
+            }
+        }
+        QuizPhase::Finishing => {
+            let page = page.clone();
+            // Assume final page always has next_url to the
+            congrats_page(&page.location)
+        }
     }
 }

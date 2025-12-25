@@ -1,54 +1,46 @@
+use crate::{models::get_question, state::Answer};
 use yew::prelude::*;
-use crate::models::Question;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct ReviewComponentProps {
-    pub questions: Vec<Question>,
-    pub answers: Vec<Option<String>>,
+    pub answers: Vec<Answer>,
     pub on_submit: Callback<()>,
+    pub page_url: String,
 }
 
-pub struct ReviewComponent;
+#[component]
+pub fn ReviewComponent(props: &ReviewComponentProps) -> Html {
+    let ReviewComponentProps {
+        answers,
+        on_submit,
+        page_url,
+    } = props;
+    let on_submit = on_submit.clone();
 
-impl Component for ReviewComponent {
-    type Message = ();
-    type Properties = ReviewComponentProps;
+    let on_click = Callback::from(move |_| {
+        on_submit.emit(());
+    });
 
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
-        let questions = ctx.props().questions.clone();
-        let answers = ctx.props().answers.clone();
-        let on_submit = ctx.props().on_submit.clone();
-        
-        html! {
-            <div class="review-component">
-                <h2>{ "Review Your Answers" }</h2>
-                <div class="review-list">
-                    { for questions.iter().enumerate().map(move |(i, q)| {
-                        let answer = answers.get(i)
-                            .and_then(|a| a.as_ref())
-                            .map(|a| a.as_str())
-                            .unwrap_or("Not answered");
-                        
+    html! {
+        <div>
+            {
+                answers.iter().enumerate().map(|(_, answer)| {
+                    if let Some(question) = get_question(page_url, answer.question_index) {
                         html! {
-                            <div class="review-item">
-                                <h3>{ q.child.name.clone() }</h3>
-                                <p class="review-question">{ q.question.clone() }</p>
-                                <p class="review-answer">{ format!("Your answer: {}", answer) }</p>
+                            <div key={answer.question_index}>
+                                <p><strong>{ &question.child }</strong></p>
+                                <p>{ &question.question }</p>
+                                <p>{ "Answer: " }{ &question.answers[answer.answer_index] }</p>
                             </div>
                         }
-                    })}
-                </div>
-                <button
-                    class="submit-button"
-                    onclick={move |_| on_submit.emit(())}
-                >
-                    { "Submit" }
-                </button>
-            </div>
-        }
+                    } else {
+                        html! {}
+                    }
+                }).collect::<Html>()
+            }
+            <button onclick={on_click}>
+                { "Submit" }
+            </button>
+        </div>
     }
 }

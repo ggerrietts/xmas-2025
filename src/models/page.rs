@@ -28,18 +28,18 @@ impl PageCard {
     pub fn vec_from_pages(pages: &Vec<Page>) -> Vec<PageCard> {
         let mut page_cards = Vec::new();
         let mut first = true;
-        let mut location: String;
+        let mut location = String::new();
         for page in pages {
-            location = page.location.clone();
             if first {
                 first = false;
-                continue;
+            } else {
+                let card = PageCard {
+                    next_url: page.url.clone(),
+                    location: location.clone(),
+                };
+                page_cards.push(card);
             }
-            let card = PageCard {
-                next_url: page.url.clone(),
-                location: location.clone(),
-            };
-            page_cards.push(card);
+            location = page.location.clone();
         }
         page_cards
     }

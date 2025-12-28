@@ -18,3 +18,29 @@ impl Page {
         }
     }
 }
+
+pub struct PageCard {
+    pub next_url: String,
+    pub location: String,
+}
+
+impl PageCard {
+    pub fn vec_from_pages(pages: &Vec<Page>) -> Vec<PageCard> {
+        let mut page_cards = Vec::new();
+        let mut first = true;
+        let mut location: String;
+        for page in pages {
+            location = page.location.clone();
+            if first {
+                first = false;
+                continue;
+            }
+            let card = PageCard {
+                next_url: page.url.clone(),
+                location: location.clone(),
+            };
+            page_cards.push(card);
+        }
+        page_cards
+    }
+}

@@ -5,6 +5,7 @@ use yew::prelude::*;
 pub struct ReviewComponentProps {
     pub answers: Vec<Answer>,
     pub on_submit: Callback<()>,
+    pub on_retry: Callback<()>,
     pub page_url: String,
 }
 
@@ -13,34 +14,44 @@ pub fn ReviewComponent(props: &ReviewComponentProps) -> Html {
     let ReviewComponentProps {
         answers,
         on_submit,
+        on_retry,
         page_url,
     } = props;
     let on_submit = on_submit.clone();
+    let on_retry = on_retry.clone();
 
-    let on_click = Callback::from(move |_| {
+    let on_retry_click = Callback::from(move |_| {
+        on_retry.emit(());
+    });
+
+    let on_submit_click = Callback::from(move |_| {
         on_submit.emit(());
     });
 
     html! {
-        <div>
-            {
-                answers.iter().enumerate().map(|(_, answer)| {
-                    if let Some(question) = get_question(page_url, answer.question_index) {
-                        html! {
-                            <div key={answer.question_index}>
-                                <p><strong>{ &question.child }</strong></p>
-                                <p>{ &question.question }</p>
-                                <p>{ "Answer: " }{ &question.answers[answer.answer_index] }</p>
-                            </div>
+        <div class="review-component page-xmas">
+            <div class="page-content">
+                <h2>{ "Review Your Answers" }</h2>
+                <ol>
+                {
+                    answers.iter().enumerate().map(|(_, answer)| {
+                        if let Some(question) = get_question(page_url, answer.question_index) {
+                            html! {
+                                <li><strong>{ &question.question }</strong><br/>
+                                    <em>{ format!("{}'s answer: ", &question.child) }</em>{ &question.answers[answer.answer_index] }
+                                </li>
+                            }
+                        } else {
+                            html! {}
                         }
-                    } else {
-                        html! {}
-                    }
-                }).collect::<Html>()
-            }
-            <button onclick={on_click}>
-                { "Submit" }
-            </button>
+                    }).collect::<Html>()
+                }
+                </ol>
+                <div class="grid">
+                    <div><button class="btn-xmas" onclick={on_submit_click}>{ "Submit" }</button></div>
+                    <div><button class="btn-xmas-secondary" onclick={on_retry_click}>{ "Retry" }</button></div>
+                </div>
+            </div>
         </div>
     }
 }

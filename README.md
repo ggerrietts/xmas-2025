@@ -42,26 +42,7 @@ This creates a `dist/` directory with all the files needed for deployment.
 
 ## Configuration
 
-Edit `data.json` to customize the scavenger hunt. The structure is:
-
-```json
-{
-  "pages": [
-    {
-      "url": "page1",
-      "next_destination": "under the Christmas tree",
-      "questions": [
-        {
-          "child": { "name": "Alice" },
-          "question": "What is Alice's favorite color?",
-          "correct_answer": "Blue",
-          "answers": ["Red", "Blue", "Green", "Yellow"]
-        }
-      ]
-    }
-  ]
-}
-```
+Edit `models/tree.rs` to customize the scavenger hunt.
 
 ## Deployment
 
@@ -74,7 +55,7 @@ To deploy manually:
 
 ## Usage
 
-1. Generate QR codes pointing to `https://yourusername.github.io/xmas-2025/#page1`, `#page2`, etc.
+1. Generate "hint cards".
 2. Place QR codes at scavenger hunt locations
 3. Children scan QR codes and answer their personalized questions
 4. After all questions are answered, they review and submit

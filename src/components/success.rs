@@ -28,20 +28,26 @@ pub fn SuccessComponent(props: &SuccessProps) -> Html {
     };
 
     html! {
-        <div>
-            <h2>{ "Success!" }</h2>
-            <p>{ "You got all questions correct!" }</p>
-            <p>{ format!("Find your next clue at {}.", location) }</p>
-            <p>{ "Type the code word on that clue here:" }</p>
-            <input
-                type="text"
-                placeholder="destination"
-                oninput={on_input}
-                value={(*destination).clone()}
-            />
-            <button onclick={on_submit}>
-                { "Go!" }
-            </button>
+        <div class="page-xmas">
+            <div class="page-content">
+                <h2>{ "Success!" }</h2>
+                <p>{ "You got all questions correct!" }</p>
+                <p>{ format!("Find your next clue {}.", location) }</p>
+                <p>{ "Type the code word on that clue here:" }</p>
+                <form>
+                    <fieldset role="group">
+                        <input
+                            type="text"
+                            placeholder="code word"
+                            oninput={on_input}
+                            value={(*destination).clone()}
+                        />
+                        <button onclick={on_submit}>
+                            { "Go!" }
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
         </div>
     }
 }

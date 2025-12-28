@@ -1,4 +1,5 @@
-use crate::components::PageComponent;
+use crate::components::{fragments::start_page, PageComponent, PrintComponent};
+
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -6,21 +7,20 @@ use yew_router::prelude::*;
 pub enum Route {
     #[at("/")]
     Start,
+    #[at("/print")]
+    Print,
     #[at("/*page")]
     Page { page: String },
 }
 
 pub fn route_switch(route: Route) -> Html {
     match route {
-        Route::Start => html! {
-            <div>
-                <h1>{ "Welcome to the Xmas Quiz!" }</h1>
-                <p>{ "Get ready to test your knowledge and have some festive fun!" }</p>
-                <a href="/happyholly">{ "Start the Quiz" }</a>
-            </div>
-        },
+        Route::Start => start_page(),
         Route::Page { page } => html! {
             <PageComponent page_url={page} />
+        },
+        Route::Print => html! {
+            <PrintComponent />
         },
     }
 }

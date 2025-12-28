@@ -52,6 +52,12 @@ pub fn PageComponent(props: &PageComponentProps) -> Html {
                 <ReviewComponent
                     page_url={page_url.clone()}
                     answers={page_state.answers.clone()}
+                    on_retry={
+                        let page_state = page_state.clone();
+                        Callback::from(move |_| {
+                            page_state.dispatch(QuizAction::Retry);
+                        })
+                    }
                     on_submit={
                         let page_state = page_state.clone();
                         Callback::from(move |_| {
@@ -95,7 +101,6 @@ pub fn PageComponent(props: &PageComponentProps) -> Html {
         }
         QuizPhase::Finishing => {
             let page = page.clone();
-            // Assume final page always has next_url to the
             congrats_page(&page.location)
         }
     }

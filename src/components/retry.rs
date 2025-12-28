@@ -12,12 +12,14 @@ pub fn RetryComponent(props: &RetryProps) -> Html {
         on_retry.emit(());
     });
     html! {
-        <div>
-            <h2>{ "Oh no!" }</h2>
-            <p>{ "At least one of your answers was incorrect. You'll have to try again." }</p>
-            <button onclick={on_click}>
-                { "Retry" }
-            </button>
+        <div class="page-xmas">
+            <div class="page-content">
+                <h2>{ "Oh no!" }</h2>
+                <p>{ "At least one of your answers was incorrect. You'll have to try again." }</p>
+                <button class="btn-xmas" onclick={on_click}>
+                    { "Retry" }
+                </button>
+            </div>
         </div>
     }
 }

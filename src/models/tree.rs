@@ -142,7 +142,7 @@ fn pages() -> Vec<Page> {
                         Question::new(
                             "Bridget",
                             "Which character in 'Criminal Minds' is known for their love of magic tricks and sleight-of-hand?",
-                            1,
+                            0,
                             vec![
                                 "Spencer Reid",
                                 "David Rossi",
@@ -220,6 +220,17 @@ fn pages() -> Vec<Page> {
                     "snowflake",
                     "in the veggie drawer",
                     vec![
+                        Question::new(
+                            "Gwen",
+                            "TWICE was formed through the reality competition program 'Sixteen'. What was the original purpose of that show in relation to the group's lineup?",
+                            1,
+                            vec![
+                                "To select trainees to form multiple JYP groups",
+                                "To choose members for TWICE from a larger pool of contestants",
+                                "To train backup dancers for JYP artists",
+                                "To determine which members would become solo artists",
+                            ],
+                        ),
                         Question::new(
                             "Bridget",
                             "Which Harry Styles album includes the song 'As It Was'?",

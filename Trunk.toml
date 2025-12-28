@@ -1,6 +1,7 @@
 [build]
 target = "index.html"
 dist = "dist"
+public_url = "xmas-2025"
 
 [serve]
 address = "127.0.0.1"

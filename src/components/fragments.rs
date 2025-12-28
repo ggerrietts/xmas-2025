@@ -29,7 +29,7 @@ pub fn start_page() -> Html {
             <div class="page-content">
                 <h2>{ "Welcome to the Xmas Quiz!" }</h2>
                 <p>{ "Get ready to test your knowledge and have some festive fun!" }</p>
-                <a href="/start">{ "Start the Quiz" }</a>
+                <a href="start">{ "Start the Quiz" }</a>
             </div>
         </div>
     }

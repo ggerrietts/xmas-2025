@@ -1,14 +1,23 @@
-# Christmas Scavenger Hunt 2025
+# Christmas Treasure Hunt 2025
 
-A Rust + Yew web application for a family Christmas scavenger hunt. Each QR code leads to a page with personalized trivia questions for 3 children.
+A Rust + Yew web application for a family Christmas treasure hunt. From the
+start page, each child is asked a multiple-choice trivia question related to
+their personal interests. After answering, the next child receives a question.
+When all children have answered, a review screen allows retrying or submitting.
+On submit, the answers are checked. If incorrect, they must try again. No
+feedback is supplied around which question was wrong, encouraging collaborative
+conversation. When all answers are correct, the children are presented a
+location, which they must explore to find the next "code word". Entering the
+code word leads to a new round of questions. This cycle repeats until all
+questions are exhausted.
 
 ## Features
 
 - Sequential question flow (one question at a time)
 - Review page showing all questions and answers before submission
 - Validation: all answers must be correct to proceed
-- Hash-based routing for different scavenger hunt pages
-- JSON configuration file for easy customization
+- a `print` route that generates "clue cards", to be printed and placed at the
+  specified destination.
 
 ## Setup
 
@@ -46,7 +55,9 @@ Edit `models/tree.rs` to customize the scavenger hunt.
 
 ## Deployment
 
-The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically builds and deploys to GitHub Pages when you push to the `main` branch.
+The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`)
+that automatically builds and deploys to GitHub Pages when you push to the
+`main` branch.
 
 To deploy manually:
 
@@ -63,12 +74,18 @@ To deploy manually:
 
 ## Project Structure
 
-- `src/models.rs` - Data structures
-- `src/config.rs` - JSON loading logic
-- `src/router.rs` - Hash-based routing
+- `src/models/` - Data structures
+  - `page.rs` - includes the Page and PageCard data structures
+  - `question.rs` - includes the Question data structure
+  - `tree.rs` - includes the static declaration of the questions and answers,
+     plus accessor functions.
+- `src/router.rs` - URL-based routing
 - `src/components/` - React-like components
+  - `fragments.rs` - HTML generation functions for simple HTML.
   - `page.rs` - Main page orchestrator
+  - `print.rs` - A page of "clue cards", suitable for printing on 3.5" x 5" cards
   - `question.rs` - Individual question display
-  - `review.rs` - Review page
-  - `result.rs` - Success/failure display
-- `data.json` - Scavenger hunt configuration
+  - `retry.rs` - Retry button resets the page state
+  - `review.rs` - Review page for reviewing all answers
+  - `success.rs` - Success display with an entry for the next "code word", which
+     is used as the next URL.

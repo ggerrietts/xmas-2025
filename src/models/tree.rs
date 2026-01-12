@@ -35,19 +35,19 @@ fn pages() -> Vec<Page> {
                     "behind the tree",
                     vec![
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "In 'Law & Order: SVU', who is NOT one of the main detectives?",
                             2,
                             vec!["Olivia Benson", "Elliot Stabler", "Alexandra Cabot", "John Munch"],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "Which of the following is NOT an NF song?",
                             0,
                             vec!["Desire", "Lie", "Let You Down", "Clouds"],
                         ),
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "Which members of Twice performed on the K-Pop Demon Hunters soundtrack?",
                             2,
                             vec![
@@ -65,7 +65,7 @@ fn pages() -> Vec<Page> {
                     "inside the dryer",
                     vec![
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "Who directed the movie 'Inglorious Basterds'?",
                             1,
                             vec![
@@ -76,13 +76,13 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "In 'My Lie in April', what instrument does Kousei Arima play?",
                             2,
                             vec!["Violin", "Cello", "Piano", "Flute"],
                         ),
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "In 'Law & Order: SVU', which longtime colleague does Olivia Benson ultimately replace when she is promoted to Captain of the unit?",
                             2,
                             vec![
@@ -100,7 +100,7 @@ fn pages() -> Vec<Page> {
                     "by the coffee",
                     vec![
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "Which band is the battle-of-the-bands archrival of the Rainbooms?",
                             1,
                             vec![
@@ -111,7 +111,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "Which Childish Gambino album features the song 'Redbone'?",
                             2,
                             vec![
@@ -122,7 +122,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "Which gang fought Pennywise in 'It'?",
                             0,
                             vec![
@@ -140,7 +140,7 @@ fn pages() -> Vec<Page> {
                     "in bathroom cabinet",
                     vec![
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "Which character in 'Criminal Minds' is known for their love of magic tricks and sleight-of-hand?",
                             0,
                             vec![
@@ -151,7 +151,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "In 'Stranger Things', what lab ran the program that connects Eleven to the Upside Down?",
                             1,
                             vec![
@@ -162,7 +162,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "At South Park Elementary, what subject does Mr. Garrison primarily teach during the early seasons of the show?",
                             2,
                             vec![
@@ -180,7 +180,7 @@ fn pages() -> Vec<Page> {
                     "in dad's sock drawer",
                     vec![
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "In the medical drama 'The Pitt', what unique narrative structure does the first season use for its episodes?",
                             1,
                             vec![
@@ -191,7 +191,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "In 'My Little Pony: Friendship Is Magic', what key event leads to Twilight Sparkle becoming the Princess of Friendship?",
                             1,
                             vec![
@@ -202,7 +202,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "What is the name of the group of working-class teens at the center of 'Outer Banks'?",
                             3,
                             vec![
@@ -221,7 +221,7 @@ fn pages() -> Vec<Page> {
                     "in the veggie drawer",
                     vec![
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "TWICE was formed through the reality competition program 'Sixteen'. What was the original purpose of that show in relation to the group's lineup?",
                             1,
                             vec![
@@ -232,7 +232,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "Which Harry Styles album includes the song 'As It Was'?",
                             2,
                             vec![
@@ -243,7 +243,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "In 'South Park', Cartman desperately wants to be invited to Kyle's birthday party at Casa Bonita. What attraction at the restaurant is his favorite?",
                             1,
                             vec![
@@ -262,7 +262,7 @@ fn pages() -> Vec<Page> {
                     "behind the measuring cups",
                     vec![
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "In 'She-Ra and the Princesses of Power', what personal realization about the Horde drives Adora to take up the Sword of Protection?",
                             1,
                             vec![
@@ -273,7 +273,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "What is the title of Coldplay's debut full-length studio album?",
                             2,
                             vec![
@@ -284,7 +284,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "What is the name of the town where 'It' takes place?",
                             2,
                             vec![
@@ -303,7 +303,7 @@ fn pages() -> Vec<Page> {
                     "under the couch cushion",
                     vec![
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "On SZA's album 'Ctrl', several songs include spoken-word commentary from her mother and grandmother. What theme do these interludes primarily reflect?",
                             1,
                             vec![
@@ -314,7 +314,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "The events of 'Black Hawk Down' are based on a U.S. military operation in which country?",
                             1,
                             vec![
@@ -325,7 +325,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "Which Mitski album includes the song 'Nobody'?",
                             2,
                             vec![
@@ -344,7 +344,7 @@ fn pages() -> Vec<Page> {
                     "under dad's keyboard",
                     vec![
                         Question::new(
-                            "Bridget",
+                            "Alice",
                             "Westfield State's main campus includes a central student gathering space that houses dining, student organizations, and activity areas. What is the name of this building?",
                             1,
                             vec![
@@ -355,7 +355,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Evan",
+                            "Bob",
                             "Which NF album features the hit song 'Let You Down'?",
                             2,
                             vec![
@@ -366,7 +366,7 @@ fn pages() -> Vec<Page> {
                             ],
                         ),
                         Question::new(
-                            "Gwen",
+                            "Carol",
                             "At many Twenty One Pilots concerts, the show closes with the crowd chanting together during 'Trees' while confetti falls and drums are played among the audience. Among fans, what does this moment most commonly represent?",
                             0,
                             vec![

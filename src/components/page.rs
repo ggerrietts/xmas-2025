@@ -5,43 +5,80 @@ use super::{
     review::ReviewComponent,
     success::SuccessComponent,
 };
-use crate::models::get_page;
 use crate::router::Route;
 use crate::state::{QuizAction, QuizPhase, QuizState};
+// use crate::router::Route;
+
+use std::rc::Rc;
 
 use yew::prelude::*;
-use yew_router::prelude::*;
+use yew_router::{
+    prelude::*,
+    query::{FromQuery, ToQuery},
+};
 
-#[derive(Properties, PartialEq, Clone)]
-pub struct PageComponentProps {
-    pub page_url: String,
+/// Creates a callback that dispatches an action and navigates to the route with the new state
+fn make_nav_callback<F>(
+    navigator: Navigator,
+    quiz_state: Rc<QuizState>,
+    action_fn: F,
+) -> Callback<()>
+where
+    F: Fn(Rc<QuizState>) -> QuizAction + 'static,
+{
+    Callback::from(move |_| {
+        let quiz_state = quiz_state.clone();
+        let quiz_action = action_fn(quiz_state.clone());
+        let new_state = quiz_state.dispatch(quiz_action);
+        let _ = navigator
+            .push_with_query(&Route::Page, new_state.to_query().unwrap().into_owned())
+            .unwrap();
+    })
+}
+
+/// Creates a callback that dispatches an action with a parameter and navigates
+fn make_nav_callback_with_param<T, F>(
+    navigator: Navigator,
+    quiz_state: Rc<QuizState>,
+    action_fn: F,
+) -> Callback<T>
+where
+    T: 'static,
+    F: Fn(Rc<QuizState>, T) -> QuizAction + 'static,
+{
+    Callback::from(move |param| {
+        let quiz_state = quiz_state.clone();
+        let quiz_action = action_fn(quiz_state.clone(), param);
+        let new_state = quiz_state.dispatch(quiz_action);
+        let _ = navigator
+            .push_with_query(&Route::Page, new_state.to_query().unwrap().into_owned())
+            .unwrap();
+    })
 }
 
 #[component]
-pub fn PageComponent(props: &PageComponentProps) -> Html {
-    let page_url = props.page_url.clone();
-    let page_state = use_reducer(|| QuizState::new(&page_url));
+pub fn PageComponent() -> Html {
     let navigator = use_navigator().unwrap();
+    let location = use_location().unwrap();
+    let quiz_state: Rc<QuizState> = {
+        let query = location.query_str();
+        Rc::new(QuizState::from_query(query).unwrap())
+    };
 
-    let page = get_page(&page_url);
-    if let None = page {
+    let page = if let Some(page) = quiz_state.get_page() {
+        page
+    } else {
         return four_oh_four();
-    }
-    let page = page.unwrap();
+    };
 
-    match page_state.quiz_status {
+    match quiz_state.quiz_status {
         QuizPhase::PresentingQuestions => {
             html! {
                 <QuestionComponent
-                    page_url={page_url.clone()}
-                    question_index={page_state.question_index}
+                    quiz_state={quiz_state.clone()}
                     on_answer_selected={
-                        let page_state = page_state.clone();
-                        Callback::from(move |selected_answer| {
-                            page_state.dispatch(QuizAction::SelectAnswer(
-                                page_state.question_index,
-                                selected_answer,
-                            ));
+                        make_nav_callback_with_param(navigator.clone(), quiz_state.clone(), |state, answer| {
+                            QuizAction::SelectAnswer(state.question_index, answer)
                         })
                     }
                 />
@@ -50,52 +87,34 @@ pub fn PageComponent(props: &PageComponentProps) -> Html {
         QuizPhase::ReviewingAnswers => {
             html! {
                 <ReviewComponent
-                    page_url={page_url.clone()}
-                    answers={page_state.answers.clone()}
+                    quiz_state={quiz_state.clone()}
                     on_retry={
-                        let page_state = page_state.clone();
-                        Callback::from(move |_| {
-                            page_state.dispatch(QuizAction::Retry);
-                        })
+                        make_nav_callback(navigator.clone(), quiz_state.clone(), |_| QuizAction::Retry)
                     }
                     on_submit={
-                        let page_state = page_state.clone();
-                        Callback::from(move |_| {
-                            page_state.dispatch(QuizAction::Review);
-                        })
+                        make_nav_callback(navigator.clone(), quiz_state.clone(), |_| QuizAction::Review)
                     }
                 />
             }
         }
         QuizPhase::MovingOn => {
-            let page = page.clone();
-            let navigator = navigator.clone();
-
-            let onsuccess = Callback::from(move |next_url: String| {
-                let page_state = page_state.clone();
-                page_state.dispatch(QuizAction::Advance(next_url.clone()));
-                navigator.push(&Route::Page { page: next_url });
-            });
-
             html! {
                 <SuccessComponent
                     location = { page.location.clone() }
-                    on_success = { onsuccess }
+                    on_success = {
+                        make_nav_callback_with_param(navigator.clone(), quiz_state.clone(), |_, next_url| {
+                            QuizAction::Advance(next_url)
+                        })
+                    }
                 />
             }
         }
         QuizPhase::Retrying => {
-            let navigator = navigator.clone();
-            let on_retry = Callback::from(move |_| {
-                let page_state = page_state.clone();
-                page_state.dispatch(QuizAction::Retry);
-                navigator.push(&Route::Page {
-                    page: page_url.clone(),
-                });
-            });
             html! {
                 <RetryComponent
-                    on_retry={on_retry}
+                    on_retry={
+                        make_nav_callback(navigator.clone(), quiz_state.clone(), |_| QuizAction::Retry)
+                    }
                 />
             }
         }

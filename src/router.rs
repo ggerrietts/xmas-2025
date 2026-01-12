@@ -9,15 +9,15 @@ pub enum Route {
     Start,
     #[at("/print")]
     Print,
-    #[at("/*page")]
-    Page { page: String },
+    #[at("/quiz")]
+    Page,
 }
 
 pub fn route_switch(route: Route) -> Html {
     match route {
         Route::Start => start_page(),
-        Route::Page { page } => html! {
-            <PageComponent page_url={page} />
+        Route::Page => html! {
+            <PageComponent />
         },
         Route::Print => html! {
             <PrintComponent />

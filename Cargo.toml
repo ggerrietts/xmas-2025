@@ -7,6 +7,7 @@ edition = "2021"
 yew = { version = "0.22", features = ["csr"] }
 yew-router = "0.19"
 web-sys = "0.3"
+anyhow = "1.0"
 
 [dev-dependencies]
 trunk = "0.21.14"

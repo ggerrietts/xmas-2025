@@ -1,21 +1,20 @@
-use crate::{models::get_question, state::Answer};
+use crate::state::QuizState;
+use std::rc::Rc;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct ReviewComponentProps {
-    pub answers: Vec<Answer>,
+    pub quiz_state: Rc<QuizState>,
     pub on_submit: Callback<()>,
     pub on_retry: Callback<()>,
-    pub page_url: String,
 }
 
 #[component]
 pub fn ReviewComponent(props: &ReviewComponentProps) -> Html {
     let ReviewComponentProps {
-        answers,
+        quiz_state,
         on_submit,
         on_retry,
-        page_url,
     } = props;
     let on_submit = on_submit.clone();
     let on_retry = on_retry.clone();
@@ -28,6 +27,8 @@ pub fn ReviewComponent(props: &ReviewComponentProps) -> Html {
         on_submit.emit(());
     });
 
+    let answers = quiz_state.answers.clone();
+
     html! {
         <div class="review-component page-xmas">
             <div class="page-content">
@@ -35,7 +36,7 @@ pub fn ReviewComponent(props: &ReviewComponentProps) -> Html {
                 <ol>
                 {
                     answers.iter().enumerate().map(|(_, answer)| {
-                        if let Some(question) = get_question(page_url, answer.question_index) {
+                        if let Some(question) = quiz_state.get_question(answer.question_index) {
                             html! {
                                 <li><strong>{ &question.question }</strong><br/>
                                     <em>{ format!("{}'s answer: ", &question.child) }</em>{ &question.answers[answer.answer_index] }

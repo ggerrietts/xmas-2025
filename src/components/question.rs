@@ -1,23 +1,21 @@
-use crate::models::get_question;
+use crate::state::QuizState;
+use std::rc::Rc;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct QuestionComponentProps {
-    pub page_url: String,
-    pub question_index: usize,
+    pub quiz_state: Rc<QuizState>,
     pub on_answer_selected: Callback<usize>,
 }
 
 #[component]
 pub fn QuestionComponent(props: &QuestionComponentProps) -> Html {
     let QuestionComponentProps {
-        page_url,
-        question_index,
+        quiz_state,
         on_answer_selected,
     } = props;
 
-    let question = get_question(page_url, *question_index).unwrap();
-
+    let question = quiz_state.get_current_question().unwrap();
     html! {
         <div class="question-component page-xmas">
             <div class="page-content">
